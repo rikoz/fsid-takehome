@@ -1,0 +1,27 @@
+.visible-countries-panel {
+    position: absolute;
+    top: 20px; 
+    left: 20px; 
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    max-width: 200px;
+}
+
+.visible-countries-panel h2 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.visible-countries-panel ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.visible-countries-panel li {
+    margin: 5px 0;
+}

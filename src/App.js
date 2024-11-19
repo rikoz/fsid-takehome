@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMapGL, { Source, Layer, NavigationControl } from 'react-map-gl';
 import Legend from './components/Legend';
 import Loader from './components/Loader';
+import VisibleCountriesPanel from './components/VisibleCountriesPanel';
 import useGeoTiff from './hooks/use-geotiff';
 import useGeoJSON from './hooks/use-geojson';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -15,11 +16,13 @@ function App() {
     height: '100vh',
     // maxBounds: [[-20, -40], [60, 40]]
   });
+  const [visibleCountries, setVisibleCountries] = useState([]);
 
   const { loading: loadingTiff, rasterLayer, bbox } = useGeoTiff('/CassavaMap_Prod_v1.tif');
   const { loading: loadingGeoJSON, geojsonData } = useGeoJSON('/country_level_cassava_production.geojson');
 
   const loading = loadingTiff || loadingGeoJSON;
+
 
   return (
     <>
@@ -35,7 +38,8 @@ function App() {
         doubleClickZoom={true}
         touchZoom={true}
         touchDragPan={true}
-        onViewportChange={nextViewport => setViewport(nextViewport)}
+        onMove={evt => setViewport(evt.viewState)}
+        onViewportChange={evt => setViewport(evt.viewState)}
       >
         {rasterLayer && bbox && (
           <Source
@@ -77,6 +81,8 @@ function App() {
         )}
         <NavigationControl />
       </ReactMapGL>
+
+      <VisibleCountriesPanel countries={visibleCountries} />
       <Legend />
     </>
   );
