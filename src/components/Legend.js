@@ -1,4 +1,5 @@
 import React from 'react';
+import './Legend.css';
 
 // Define the legend data
 const legendData = [
@@ -13,36 +14,16 @@ const legendData = [
 ];
 
 const Legend = () => (
-  <div style={{
-    position: 'absolute',
-    bottom: '20px',
-    left: '20px',
-    backgroundColor: 'white',
-    padding: '10px',
-    borderRadius: '4px',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-    zIndex: 1
-  }}>
-    <div style={{ 
-      fontWeight: 'bold', 
-      marginBottom: '5px',
-      borderBottom: '1px solid #ccc',
-      paddingBottom: '5px'
-    }}>
+  <div className="legend-container">
+    <div className="legend-title">
       Cassava Production
       <br />
       <span style={{ fontSize: '12px' }}>tonnes/km²</span>
     </div>
     {legendData.map(({ color, label }) => (
-      <div key={label} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-        <div style={{
-          width: '20px',
-          height: '20px',
-          backgroundColor: color,
-          marginRight: '8px',
-          border: '1px solid #ccc'
-        }} />
-        <span style={{ fontSize: '12px' }}>{label}</span>
+      <div key={label} className="legend-label">
+        <div className="legend-color-box" style={{ backgroundColor: color }} />
+        <span className="legend-text">{label}</span>
       </div>
     ))}
   </div>
