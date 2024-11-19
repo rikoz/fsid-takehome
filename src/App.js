@@ -5,6 +5,7 @@ import Loader from './components/Loader';
 import VisibleCountriesPanel from './components/VisibleCountriesPanel';
 import useGeoTiff from './hooks/use-geotiff';
 import useGeoJSON from './hooks/use-geojson';
+import getBoundingBox from './utils/getBoundingBox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 function App() {
@@ -12,9 +13,8 @@ function App() {
     latitude: 0,
     longitude: 20,
     zoom: 3.5,
-    width: '100vw',
-    height: '100vh',
-    // maxBounds: [[-20, -40], [60, 40]]
+    width: window.innerWidth,
+    height: window.innerHeight
   });
   const [visibleCountries, setVisibleCountries] = useState([]);
 
@@ -22,7 +22,26 @@ function App() {
   const { loading: loadingGeoJSON, geojsonData } = useGeoJSON('/country_level_cassava_production.geojson');
 
   const loading = loadingTiff || loadingGeoJSON;
+  
+  // FINDING VISIBLE COUNTRIES
+  const getVisibleCountries = () => {
+    if (!geojsonData) return;
+    
+    const { north, south, east, west } = getBoundingBox(viewport);
 
+    const visible = geojsonData.features.filter(country => {
+      const coords = country.geometry.coordinates[0];
+      return coords.some(coord => 
+        coord[1] >= west && coord[1] <= east && coord[0] >= south && coord[0] <= north
+      );
+    });
+
+    setVisibleCountries(visible);
+  };
+
+  useEffect(() => {
+    getVisibleCountries();
+  }, [viewport, geojsonData]);
 
   return (
     <>
@@ -38,8 +57,9 @@ function App() {
         doubleClickZoom={true}
         touchZoom={true}
         touchDragPan={true}
-        onMove={evt => setViewport(evt.viewState)}
-        onViewportChange={evt => setViewport(evt.viewState)}
+        onMove={evt => setViewport({...viewport, ...evt.viewState})}
+        onResize={evt => setViewport({...viewport, width: window.innerWidth, height: window.innerHeight})}
+        onViewportChange={evt => setViewport({...viewport, ...evt.viewState})}
       >
         {rasterLayer && bbox && (
           <Source
@@ -57,7 +77,7 @@ function App() {
               id="cassava-layer-image"
               type="raster"
               paint={{
-                'raster-opacity': 1,
+                'raster-opacity': 0.8,
                 'raster-fade-duration': 0,
                 'raster-contrast': 0,
                 'raster-brightness-min': 0,
