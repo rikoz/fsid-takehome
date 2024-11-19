@@ -97,6 +97,14 @@ function App() {
                 'line-width': 1
               }}
             />
+            <Layer
+              id="geojson-fill"
+              type="fill"
+              paint={{
+                'fill-color': '#000000',
+                'fill-opacity': 0.2
+              }}
+            />
           </Source>
         )}
         <NavigationControl />
