@@ -32,7 +32,7 @@ function App() {
     const visible = geojsonData.features.filter(country => {
       const coords = country.geometry.coordinates[0];
       return coords.some(coord => 
-        coord[1] >= west && coord[1] <= east && coord[0] >= south && coord[0] <= north
+        coord[0] >= west && coord[0] <= east && coord[1] >= south && coord[1] <= north
       );
     });
 
